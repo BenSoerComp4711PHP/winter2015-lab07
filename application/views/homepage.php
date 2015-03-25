@@ -1,3 +1,10 @@
 <div class="row">
-    Burger Bonanza?
+    Orders:
+    <ul>
+    {orders}
+        <li><a href="welcome/order/{filename}">{filename}</a></li>
+    {/orders}
+    </ul>
+
+    Select an order to view its reciept
 </div>
