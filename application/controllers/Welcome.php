@@ -86,10 +86,13 @@ class Welcome extends Application {
             //get cheeses
 
             $cheese = $this->order->getCheeses($i);
-            if($cheese == null){
-                $cheese = "";
+            $cheeseString = "";
+            if($cheese != null){
+                foreach($cheese as $key => $value ){
+                    $cheeseString .= " $value ($key)";
+                }
             }
-            $aBurger["cheese"] = $cheese;
+            $aBurger["cheese"] = $cheeseString;
 
             //get instructions if any
 
@@ -114,6 +117,8 @@ class Welcome extends Application {
 
 
         $this->data["burgers"] = $burgersArray;
+        $this->data["ordertype"] = $this->order->getOrderType();
+        $this->data["customer"] = $this->order->getCustomer();
 
 
 	// Present the list to choose from

@@ -1,5 +1,6 @@
 <div class="row">
 Le Reciept
+    <p> Order For {customer} ({ordertype})</p>
     <ul style="list-style-type:none">
         {burgers}
             <p> Le Burger de mange</p>
@@ -22,6 +23,8 @@ Le Reciept
 
                 </ul>
             </li>
+            <li> {name} </li>
+            <li> {instructions} </li>
 
         {/burgers}
     </ul>
