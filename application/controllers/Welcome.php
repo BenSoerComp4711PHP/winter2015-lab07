@@ -34,17 +34,9 @@ class Welcome extends Application {
 
         $this->data["orders"] = $xmlFilesArray;
 
-        //var_dump($filesArray);
-
-        //var_dump($xmlFilesArray);
-
-
-
-
-	
-	// Present the list to choose from
-	$this->data['pagebody'] = 'homepage';
-	$this->render();
+        // Present the list to choose from
+        $this->data['pagebody'] = 'homepage';
+        $this->render();
     }
     
     //-------------------------------------------------------------

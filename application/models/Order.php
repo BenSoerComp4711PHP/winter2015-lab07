@@ -168,10 +168,16 @@ class Order extends CI_Model{
         }
     }
 
+    /**gets the ordertype for the order
+     * @return string the ordertype
+     */
     public function getOrderType(){
         return $this->orderType;
     }
 
+    /**gets the customer for the order
+     * @return string the customer
+     */
     public function getCustomer(){
         return $this->customer;
     }
