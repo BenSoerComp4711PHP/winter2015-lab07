@@ -67,6 +67,10 @@ class Menu extends CI_Model {
     }
 
 
+    /**gets the cheese if it exists from the cheeses associative array
+     * @param $code the code the cheese object is placed in the cheeses associative array
+     * @return null OR cheeseObject - the cheeseObject if it exists
+     */
     public function getCheese($code){
         if (isset($this->cheeses[$code]))
             return $this->cheeses[$code];
@@ -74,6 +78,10 @@ class Menu extends CI_Model {
             return null;
     }
 
+    /**gets the topping if it exists from the toppings associative array
+     * @param $code the code the topping object is placed in the toppings associative array
+     * @return null OR toppingObject - the toppingObject if it exists
+     */
     public function getTopping($code){
         if (isset($this->toppings[$code]))
             return $this->toppings[$code];
@@ -81,6 +89,10 @@ class Menu extends CI_Model {
             return null;
     }
 
+    /**gets the sauce if it exists from the sauces associative array
+     * @param $code the code the sauce object is placed in the sauces associative array
+     * @return null OR sauceObject - the sauceObject if it exists
+     */
     public function getSauce($code){
         if (isset($this->sauces[$code]))
             return $this->sauces[$code];
@@ -96,7 +108,10 @@ class Menu extends CI_Model {
         return $this->patty_names;
     }
 
-    // retrieve a patty record, perhaps for pricing
+    /**gets the patty if it exists from the patties associative array
+     * @param $code the code the patty object is placed in the patties associative array
+     * @return null OR pattyObject - the pattyObject if it exists
+     */
     function getPatty($code) {
         if (isset($this->patties[$code]))
             return $this->patties[$code];
