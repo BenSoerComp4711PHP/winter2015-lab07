@@ -144,10 +144,4 @@ class Welcome extends Application {
 	$this->data['pagebody'] = 'justone';
 	$this->render();
     }
-
-    private function convertCodeToName($array){
-
-    }
-    
-
 }

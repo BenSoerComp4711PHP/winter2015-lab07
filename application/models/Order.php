@@ -83,6 +83,10 @@ class Order extends CI_Model{
         return count($this->burgerArray);
     }
 
+    /**gets the total price for a given burger in the burgerArray
+     * @param $index the index position of the burger we are wanting the total price for
+     * @return mixed the total price
+     */
     public function getBurgerTotalPrice($index){
         $burgerObject = $this->burgerArray[$index];
 
@@ -115,19 +119,12 @@ class Order extends CI_Model{
             }
         }
 
-        //total of sauces
-        /*$saucePrice = 0.00;
-        if(isset($burgerObject->sauces)){
-            foreach($burgerObject->sauces as $sauceCode){
-                $sauce = $this->menu->getTopping($sauceCode);
-                $toppingPrice += $sauce->price;
-            }
-        }*/
-
-
         return ($pattyPrice + $cheesePrice + $toppingPrice);
     }
 
+    /**gets the total price for the current order
+     * @return float the total price of the order
+     */
     public function getOrderTotal(){
         $orderTotal = 0.00;
         for($i = 0; $i < $this->getBurgerCount(); $i++){
