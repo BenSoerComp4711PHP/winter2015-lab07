@@ -27,42 +27,42 @@ class Order extends CI_Model{
     public function parse($orderFile){
         $this->xml = simplexml_load_file(DATAPATH . $orderFile);
 
-        $this->orderType = $this->xml["type"];
-        $this->customer = $this->xml->customer;
+        $this->orderType = (string)$this->xml["type"];
+        $this->customer = (string)$this->xml->customer;
 
 
         foreach($this->xml->burger as $item){
             $burgerObject = new stdClass();
-            $burgerObject->patty = $item->patty["type"];
+            $burgerObject->patty = (string)$item->patty["type"];
 
             if(isset($item->cheeses)){
                 if(isset($item->cheeses["top"])){
-                    $burgerObject->cheeses["top"] = $item->cheeses["top"];
+                    $burgerObject->cheeses["top"] = (string)$item->cheeses["top"];
                 }
                 if(isset($item->cheeses["bottom"])){
-                    $burgerObject->cheeses["bottom"] = $item->cheeses["bottom"];
+                    $burgerObject->cheeses["bottom"] = (string)$item->cheeses["bottom"];
                 }
             }
 
             if(isset($item->topping)){
                 foreach($item->topping as $topping){
-                    $burgerObject->toppings[] = $topping["type"];
+                    $burgerObject->toppings[] = (string)$topping["type"];
                 }
             }
 
             if(isset($item->sauce)){
                 foreach($item->sauce as $sauce){
-                    $burgerObject->sauces[] = $sauce["type"];
+                    $burgerObject->sauces[] = (string)$sauce["type"];
                 }
             }
 
 
             if(isset($item->instructions)){
-                $burgerObject->instructions = $item["instructions"];
+                $burgerObject->instructions = (string)$item["instructions"];
             }
 
             if(isset($item->name)){
-                $burgerObject->name = $item->name;
+                $burgerObject->name = (string)$item->name;
             }
 
             $this->burgerArray[] = $burgerObject;
@@ -81,6 +81,59 @@ class Order extends CI_Model{
      */
     public function getBurgerCount(){
         return count($this->burgerArray);
+    }
+
+    public function getBurgerTotalPrice($index){
+        $burgerObject = $this->burgerArray[$index];
+
+        //total of patty
+        $patty = $this->menu->getPatty($burgerObject->patty);
+        $pattyPrice = $patty->price;
+
+        //total of cheese
+        $cheesePrice = 0.00;
+        if(isset($burgerObject->cheeses)){
+            if(isset($burgerObject->cheeses["top"])){
+                $cheese = $this->menu->getCheese($burgerObject->cheeses["top"]);
+                $cheesePrice += $cheese->price;
+            }
+
+            if(isset($burgerObject->cheeses["bottom"])){
+                $cheese = $this->menu->getCheese($burgerObject->cheeses["bottom"]);
+                $cheesePrice += $cheese->price;
+            }
+
+
+        }
+
+        //total of topping
+        $toppingPrice = 0.00;
+        if(isset($burgerObject->toppings)){
+            foreach($burgerObject->toppings as $toppingCode){
+                $topping = $this->menu->getTopping($toppingCode);
+                $toppingPrice += $topping->price;
+            }
+        }
+
+        //total of sauces
+        /*$saucePrice = 0.00;
+        if(isset($burgerObject->sauces)){
+            foreach($burgerObject->sauces as $sauceCode){
+                $sauce = $this->menu->getTopping($sauceCode);
+                $toppingPrice += $sauce->price;
+            }
+        }*/
+
+
+        return ($pattyPrice + $cheesePrice + $toppingPrice);
+    }
+
+    public function getOrderTotal(){
+        $orderTotal = 0.00;
+        for($i = 0; $i < $this->getBurgerCount(); $i++){
+            $orderTotal += $this->getBurgerTotalPrice($i);
+        }
+        return $orderTotal;
     }
 
     /**gets the toppings array at the given index of the burgersArray

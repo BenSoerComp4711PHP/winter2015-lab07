@@ -2,7 +2,7 @@
     Orders:
     <ul>
     {orders}
-        <li><a href="welcome/order/{filename}">{filename}</a></li>
+        <li><a href="welcome/order/{filename}">{filename} ({customername})</a></li>
     {/orders}
     </ul>
 

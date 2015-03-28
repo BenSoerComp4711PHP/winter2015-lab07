@@ -27,8 +27,16 @@ class Welcome extends Application {
         $xmlFilesArray = array();
         foreach($filesArray as $file){
             if(substr_compare($file, "order", 0, 5) == 0){
+
+
                 $subArray["filename"] = $file;
+
+                //get the name of the customer in the order
+                $this->order->parse($file);
+                $subArray["customername"] = $this->order->getCustomer();
+
                 $xmlFilesArray[] = $subArray;
+
             }
         }
 
@@ -60,20 +68,31 @@ class Welcome extends Application {
             //get toppings
 
             $toppingsArray = $this->order->getToppings($i);
-            $toppingsAssoc = $this->order->getAssociative($toppingsArray, "topping");
+            $toppingsNameArray = array();
+            foreach($toppingsArray as $toppingCode){
+                $topping = $this->menu->getTopping($toppingCode);
+                $toppingsNameArray[] = $topping->name;
+            }
+            $toppingsAssoc = $this->order->getAssociative($toppingsNameArray, "topping");
 
             $aBurger["toppings"] = $toppingsAssoc;
 
             //get sauces
 
             $saucesArray = $this->order->getSauces($i);
-            $saucesAssoc = $this->order->getAssociative($saucesArray, "sauce");
+            $saucesNameArray = array();
+            foreach($saucesArray as $sauceCode){
+                $sauce = $this->menu->getSauce($sauceCode);
+                $saucesNameArray[] = $sauce->name;
+            }
+            $saucesAssoc = $this->order->getAssociative($saucesNameArray, "sauce");
 
             $aBurger["sauces"] = $saucesAssoc;
 
             //get patties
 
-            $aBurger["patty"] = $this->order->getPatty($i);
+            $patty = $this->menu->getPatty($this->order->getPatty($i));
+            $aBurger["patty"] = $patty->name;
 
             //get cheeses
 
@@ -81,7 +100,8 @@ class Welcome extends Application {
             $cheeseString = "";
             if($cheese != null){
                 foreach($cheese as $key => $value ){
-                    $cheeseString .= " $value ($key)";
+                    $cheeseObject = $this->menu->getCheese($value);
+                    $cheeseString .= " $cheeseObject->name ($key)";
                 }
             }
             $aBurger["cheese"] = $cheeseString;
@@ -102,6 +122,12 @@ class Welcome extends Application {
                 $name = "";
             }
 
+            //get price
+            $cost = $this->order->getBurgerTotalPrice($i);
+            $aBurger["cost"] = $cost;
+            $aBurger["index"] = $i + 1;
+
+
             $aBurger["name"] = $name;
             $burgersArray[] = $aBurger;
 
@@ -111,11 +137,16 @@ class Welcome extends Application {
         $this->data["burgers"] = $burgersArray;
         $this->data["ordertype"] = $this->order->getOrderType();
         $this->data["customer"] = $this->order->getCustomer();
+        $this->data["ordertotal"] = $this->order->getOrderTotal();
 
 
 	// Present the list to choose from
 	$this->data['pagebody'] = 'justone';
 	$this->render();
+    }
+
+    private function convertCodeToName($array){
+
     }
     
 
